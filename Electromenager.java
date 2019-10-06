@@ -2,7 +2,7 @@ package com.company;
 
 import java.util.Scanner;
 
-public class Electromenager extends Article implements IPublicite, ISolde, IVendrePiece, toString {
+public class Electromenager extends Article implements IPublicite, ISolde, IVendrePiece, toString, IPrix {
     private String Voltage;
     private boolean discounted;
     private int tauxSolde;

@@ -2,7 +2,7 @@ package com.company;
 
 import java.util.Scanner;
 
-public class Primeur extends Article implements IPublicite, IVendreKilo, toString, IPrix {
+public class Primeur extends Article implements IPublicite, IVendreKilo, toString, IPrix, Cloneable {
 
     public Primeur(String nom, double prixunitaire, double poids){
         super(nom,prixunitaire);
@@ -46,4 +46,9 @@ public class Primeur extends Article implements IPublicite, IVendreKilo, toStrin
         double poids = Double.parseDouble(quantite);
         return this.prixUnitaire * poids;
     }
+
+    //public Primeur clone() throws CloneNotSupportedException{
+        //Primeur article = (Primeur) super.clone();
+        //return article;
+    //}
 }

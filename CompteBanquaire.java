@@ -94,7 +94,7 @@ public class CompteBanquaire {
         return strPanierArticle;
     }
 
-    public void achatArticle(Magasin magasin, Article article,String quantiteAchat){
+    public void achatArticle(Magasin magasin, Article article,String quantiteAchat) throws CloneNotSupportedException{
         if (magasin.isArticleInStock(article) != - 1){
             try{
                 if (this.client.calculAge()<10) {
@@ -107,12 +107,28 @@ public class CompteBanquaire {
                 if (prixAchat>this.solde+this.decouvertAutorise){
                     throw new RessourceFinanciereInsuffisante();
                 }
+                double poidsMemo = magasin.getArticleInStock(magasin.isArticleInStock(article)).getPoids();
+                int unitMemo = magasin.getArticleInStock(magasin.isArticleInStock(article)).getQuantite();
                 magasin.venteArticle(article, quantiteAchat);
-                retrait(prixAchat,this.code1);
-                panierArticle[this.compteur] = ((Cloneable) magasin.getArticleInStock(magasin.isArticleInStock(article))).clone();
-                //panierArticle[this.compteur] = magasin.getArticleInStock(magasin.isArticleInStock(article)).clone();
-
-                this.compteur += 1;
+                double poidsTest = magasin.getArticleInStock(magasin.isArticleInStock(article)).getPoids();
+                int unitTest = magasin.getArticleInStock(magasin.isArticleInStock(article)).getQuantite();
+                //On regarde la distance produit sur IN x IR pour la norme 1
+                if (poidsMemo - poidsTest == 0 && unitMemo - unitTest == 0) {
+                    System.out.println("Achat annulé");
+                }
+                else{
+                    String strQuantiteAchat;
+                    if (poidsMemo - poidsTest == 0){
+                        strQuantiteAchat = Integer.toString(unitMemo-unitTest);
+                    }
+                    else{
+                        strQuantiteAchat = Double.toString(poidsMemo - poidsTest);
+                    }
+                    retrait(((IPrix) article).prix(strQuantiteAchat),this.code1);
+                    Object articlePanier = magasin.getArticleInStock(magasin.isArticleInStock(article)).clone();
+                    panierArticle[this.compteur] = (Article) articlePanier;
+                    this.compteur += 1;
+                }
             }
             catch (RessourceFinanciereInsuffisante ressourceFinanciereInsuffisante){
                 ressourceFinanciereInsuffisante.getMessage();

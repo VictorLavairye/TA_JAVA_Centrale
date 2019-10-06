@@ -80,6 +80,12 @@ public class Personne {
         deptNaissance = deptNaissance(NumSecu);
         anneeNaissance = anneeNaissance(NumSecu);
     }
+    public void setAge(int age){
+        String dateTime=getDateTime();
+        dateTime=dateTime.replaceAll("-","");
+        int anneeActuelle = Integer.parseInt(dateTime.substring(0,4));
+        anneeNaissance= anneeActuelle-age;
+    }
 
 
     private String getDateTime(){
