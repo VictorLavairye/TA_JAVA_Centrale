@@ -1,6 +1,7 @@
 package Personne;
 
 import com.company.*;
+import java.util.Scanner;
 
 public class CompteBanquaire {
 
@@ -103,6 +104,12 @@ public class CompteBanquaire {
                 if (article instanceof Alcool && this.client.calculAge()<18) {
                     throw new AlcoolInterditauxMineurs();
                 }
+                System.out.println("Veuillez introduire votre code (1) pour le paiement de "+article.toStringArticle());
+                Scanner sc = new Scanner(System.in);
+                String reponse = sc.nextLine();
+                if (reponse.compareTo(this.code1) > 0) {
+                    throw new CodeIncorrect();
+                }
                 double prixAchat = ((IPrix) article).prix(quantiteAchat);
                 if (prixAchat>this.solde+this.decouvertAutorise){
                     throw new RessourceFinanciereInsuffisante();
@@ -125,13 +132,27 @@ public class CompteBanquaire {
                         strQuantiteAchat = Double.toString(poidsMemo - poidsTest);
                     }
                     retrait(((IPrix) article).prix(strQuantiteAchat),this.code1);
-                    Object articlePanier = magasin.getArticleInStock(magasin.isArticleInStock(article)).clone();
-                    panierArticle[this.compteur] = (Article) articlePanier;
-                    this.compteur += 1;
+                    if (magasin.getArticleInStock(magasin.isArticleInStock(article)).getQuantite() == -1){
+                        magasin.getArticleInStock(magasin.isArticleInStock(article)).setPoids(poidsMemo - poidsTest);
+                        Object articlePanier = magasin.getArticleInStock(magasin.isArticleInStock(article)).clone();
+                        panierArticle[this.compteur] = (Article) articlePanier;
+                        this.compteur += 1;
+                        magasin.getArticleInStock(magasin.isArticleInStock(article)).setPoids(poidsTest);
+                    }
+                    else {
+                        magasin.getArticleInStock(magasin.isArticleInStock(article)).setQuantite(unitMemo - unitTest);
+                        Object articlePanier = magasin.getArticleInStock(magasin.isArticleInStock(article)).clone();
+                        panierArticle[this.compteur] = (Article) articlePanier;
+                        this.compteur += 1;
+                        magasin.getArticleInStock(magasin.isArticleInStock(article)).setQuantite(unitTest);
+                    }
                 }
             }
             catch (RessourceFinanciereInsuffisante ressourceFinanciereInsuffisante){
                 ressourceFinanciereInsuffisante.getMessage();
+            }
+            catch (CodeIncorrect codeIncorrect){
+                codeIncorrect.getMessage();
             }
             catch (AlcoolInterditauxMineurs alcoolInterditauxMineurs){
                 alcoolInterditauxMineurs.getMessage();
