@@ -107,7 +107,7 @@ public class Magasin {
                     }
                     else {
                         this.caisseMagasin -= 0.5 * article.getPrixUnitaire() * unitAjoute;
-                        this.stockArticle[iter].setPoids(this.stockArticle[iter].getQuantite() + unitAjoute);
+                        this.stockArticle[iter].setQuantite(this.stockArticle[iter].getQuantite() + unitAjoute);
                         System.out.println(unitAjoute + " unités ont été ajouté au stock");
                         break;
                     }
@@ -204,7 +204,7 @@ public class Magasin {
                         break;
                     }
                     else {
-                        this.caisseMagasin += poidsVendu * article.getPrixUnitaire() * (100 - ((ISolde) article).getTauxSolde());
+                        this.caisseMagasin += poidsVendu * article.getPrixUnitaire() * (100 - ((ISolde) article).getTauxSolde()) / 100;
                         break;
                     }
                 }
@@ -213,7 +213,7 @@ public class Magasin {
                     int unitVente = Integer.parseInt(quantiteVente);
                     ((IVendrePiece) this.stockArticle[iter]).vendrePiece(unitVente);
                     int unitVendu = unitMemo-article.getQuantite();
-                    this.caisseMagasin += unitVendu * article.getPrixUnitaire() * (100 - ((ISolde) article).getTauxSolde());
+                    this.caisseMagasin += unitVendu * article.getPrixUnitaire() * (100 - ((ISolde) article).getTauxSolde()) / 100 ;
                     break;
                 }
             }
@@ -253,4 +253,5 @@ public class Magasin {
         }
     }
 }
+
 
